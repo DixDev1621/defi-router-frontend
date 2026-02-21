@@ -20,8 +20,17 @@ async function registerUser() {
       body: JSON.stringify({ name, email, password })
     });
 
-    const data = await response.json();
-    console.log("Register response:", data);
+    // 🔍 DEBUG PART
+    const rawText = await response.text();
+    console.log("RAW REGISTER RESPONSE:", rawText);
+
+    let data;
+    try {
+      data = JSON.parse(rawText);
+    } catch (err) {
+      alert("Backend returned HTML instead of JSON. Check backend route.");
+      return;
+    }
 
     if (!response.ok) {
       alert(data.message || "Registration failed");
@@ -57,8 +66,17 @@ async function loginUser() {
       body: JSON.stringify({ email, password })
     });
 
-    const data = await response.json();
-    console.log("Login response:", data);
+    // 🔍 DEBUG PART
+    const rawText = await response.text();
+    console.log("RAW LOGIN RESPONSE:", rawText);
+
+    let data;
+    try {
+      data = JSON.parse(rawText);
+    } catch (err) {
+      alert("Backend returned HTML instead of JSON. Check backend route.");
+      return;
+    }
 
     if (!response.ok) {
       alert(data.message || "Invalid credentials");
