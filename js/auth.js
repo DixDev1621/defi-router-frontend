@@ -2,67 +2,87 @@ const API_URL = "https://defi-router-backend-3.onrender.com";
 
 // ---------- REGISTER ----------
 async function registerUser() {
-  const name = document.getElementById("name").value.trim();
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value.trim();
+  const name = document.getElementById("name")?.value.trim();
+  const email = document.getElementById("email")?.value.trim();
+  const password = document.getElementById("password")?.value.trim();
 
   if (!name || !email || !password) {
-    alert("Fill all fields");
+    alert("Please fill all fields");
     return;
   }
 
   try {
-    const res = await fetch(`${API_URL}/api/auth/register`, {
+    const response = await fetch(`${API_URL}/api/auth/register`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password }),
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ name, email, password })
     });
 
-    const data = await res.json();
-    alert(data.message);
+    const data = await response.json();
+    console.log("Register response:", data);
 
-    if (res.ok) {
-      window.location.href = "login.html";
+    if (!response.ok) {
+      alert(data.message || "Registration failed");
+      return;
     }
-  } catch {
-    alert("Backend not running");
+
+    alert("🎉 Account created successfully!");
+    window.location.href = "login.html";
+
+  } catch (error) {
+    console.error("Register error:", error);
+    alert("Unable to connect to backend. Check network or CORS.");
   }
 }
+
 
 // ---------- LOGIN ----------
 async function loginUser() {
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value.trim();
+  const email = document.getElementById("email")?.value.trim();
+  const password = document.getElementById("password")?.value.trim();
 
   if (!email || !password) {
-    alert("Fill all fields");
+    alert("Please fill all fields");
     return;
   }
 
   try {
-    const res = await fetch(`${API_URL}/api/auth/login`, {
+    const response = await fetch(`${API_URL}/api/auth/login`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email, password })
     });
 
-    const data = await res.json();
+    const data = await response.json();
+    console.log("Login response:", data);
+
+    if (!response.ok) {
+      alert(data.message || "Invalid credentials");
+      return;
+    }
 
     if (data.token) {
       localStorage.setItem("token", data.token);
-      alert("Login successful");
+      alert("✅ Welcome back!");
       window.location.href = "index.html";
     } else {
-      alert(data.message || "Login failed");
+      alert("Login failed");
     }
-  } catch {
-    alert("Backend not running");
+
+  } catch (error) {
+    console.error("Login error:", error);
+    alert("Unable to connect to backend. Check network or CORS.");
   }
 }
+
 
 // ---------- LOGOUT ----------
 function logoutUser() {
   localStorage.removeItem("token");
-  alert("Logged out successfully");
+  alert("👋 Logged out successfully");
   window.location.href = "login.html";
 }
