@@ -1,93 +1,227 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Register | DeFi Router</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>Register | DeFi Router</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body {
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-      font-family: "Poppins", sans-serif;
-      color: white;
-    }
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Poppins",sans-serif;
+}
 
-    .card {
-      width: 360px;
-      padding: 30px;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.1);
-      backdrop-filter: blur(15px);
-      box-shadow: 0 0 30px rgba(0,0,0,0.4);
-    }
+body{
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:linear-gradient(135deg,#0f0c29,#1a103d,#32185b,#7326c5);
+  background-size:300% 300%;
+  animation:gradientMove 12s ease infinite;
+  overflow:hidden;
+}
 
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      color: #c084fc;
-    }
+@keyframes gradientMove{
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
 
-    input {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border-radius: 8px;
-      border: none;
-      outline: none;
-      font-size: 14px;
-    }
+.card{
+  width:360px;
+  padding:45px;
+  border-radius:20px;
+  backdrop-filter:blur(20px);
+  background:rgba(255,255,255,0.08);
+  box-shadow:0 10px 40px rgba(0,0,0,0.6);
+  text-align:center;
+  color:#fff;
+  animation:fadeIn 0.8s ease;
+}
 
-    button {
-      width: 100%;
-      padding: 12px;
-      margin-top: 15px;
-      border: none;
-      border-radius: 8px;
-      background: linear-gradient(45deg, #7c3aed, #c084fc);
-      color: white;
-      font-size: 15px;
-      font-weight: bold;
-      cursor: pointer;
-    }
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(25px);}
+  to{opacity:1; transform:translateY(0);}
+}
 
-    button:hover {
-      opacity: 0.9;
-    }
+.card h2{
+  margin-bottom:25px;
+  color:#c084fc;
+  font-size:24px;
+}
 
-    .link {
-      text-align: center;
-      margin-top: 15px;
-      font-size: 14px;
-    }
+input{
+  width:100%;
+  padding:12px;
+  margin:10px 0;
+  border:none;
+  border-radius:10px;
+  background:rgba(255,255,255,0.1);
+  color:#fff;
+  outline:none;
+  transition:0.3s;
+}
 
-    .link a {
-      color: #c084fc;
-      text-decoration: none;
-    }
-  </style>
+input:focus{
+  box-shadow:0 0 15px #b517ff;
+}
+
+button{
+  width:100%;
+  padding:12px;
+  margin-top:15px;
+  border:none;
+  border-radius:30px;
+  background:linear-gradient(45deg,#7b2ff7,#f107a3);
+  color:#fff;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+button:hover{
+  transform:scale(1.05);
+  box-shadow:0 0 20px #b517ff;
+}
+
+p{
+  margin-top:20px;
+  font-size:14px;
+}
+
+a{
+  color:#c084fc;
+  text-decoration:none;
+}
+
+/* Celebration */
+.confetti{
+  position:fixed;
+  width:8px;
+  height:14px;
+  top:-20px;
+  animation:fall linear forwards;
+}
+
+@keyframes fall{
+  to{
+    transform:translateY(100vh) rotate(720deg);
+    opacity:0;
+  }
+}
+
+.firework{
+  position:fixed;
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  animation:explode 1.2s ease-out forwards;
+}
+
+@keyframes explode{
+  to{
+    transform:scale(20);
+    opacity:0;
+  }
+}
+
+.success-box{
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  background:rgba(0,0,0,0.8);
+  padding:35px 60px;
+  border-radius:20px;
+  font-size:22px;
+  text-align:center;
+  color:#c084fc;
+  display:none;
+  animation:pop 0.5s ease;
+}
+
+@keyframes pop{
+  from{transform:translate(-50%,-50%) scale(0.5);}
+  to{transform:translate(-50%,-50%) scale(1);}
+}
+</style>
 </head>
 
 <body>
 
-  <div class="card">
-    <h2>Create Account</h2>
+<div class="card">
+  <h2>Create Account</h2>
 
-    <input id="name" placeholder="Full Name">
-    <input id="email" placeholder="Email">
-    <input id="password" type="password" placeholder="Password">
+  <input id="name" placeholder="Full Name">
+  <input id="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
 
-    <button onclick="registerUser()">Register</button>
+  <button onclick="customRegister()">Register</button>
 
-    <div class="link">
-      Already have an account?
-      <a href="login.html">Login</a>
-    </div>
-  </div>
+  <p>
+    Already have an account?
+    <a href="login.html">Login</a>
+  </p>
+</div>
 
-  <script src="js/auth.js"></script>
+<div class="success-box" id="successBox">
+  🎊 Account Created Successfully! <br>
+  Welcome to the Future of DeFi 🚀
+</div>
+
+<script src="js/auth.js"></script>
+
+<script>
+function launchConfetti(){
+  for(let i=0;i<120;i++){
+    const conf=document.createElement("div");
+    conf.classList.add("confetti");
+    conf.style.left=Math.random()*100+"vw";
+    conf.style.background=`hsl(${Math.random()*360},100%,50%)`;
+    conf.style.animationDuration=(2+Math.random()*2)+"s";
+    document.body.appendChild(conf);
+    setTimeout(()=>conf.remove(),4000);
+  }
+}
+
+function launchFireworks(){
+  for(let i=0;i<20;i++){
+    const fw=document.createElement("div");
+    fw.classList.add("firework");
+    fw.style.top=Math.random()*70+"vh";
+    fw.style.left=Math.random()*100+"vw";
+    fw.style.background=`hsl(${Math.random()*360},100%,50%)`;
+    document.body.appendChild(fw);
+    setTimeout(()=>fw.remove(),1200);
+  }
+}
+
+async function customRegister(){
+  const name=document.getElementById("name").value;
+  const email=document.getElementById("email").value;
+  const password=document.getElementById("password").value;
+
+  if(!name || !email || !password){
+    alert("Please fill all fields");
+    return;
+  }
+
+  await registerUser();
+
+  if(localStorage.getItem("token")){
+    document.getElementById("successBox").style.display="block";
+    launchConfetti();
+    launchFireworks();
+
+    setTimeout(()=>{
+      window.location.href="index.html";
+    },3500);
+  }
+}
+</script>
+
 </body>
 </html>

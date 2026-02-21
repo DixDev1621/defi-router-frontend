@@ -1,39 +1,68 @@
-const API_URL = "https://defi-router-backend-1.onrender.com";
+const API_URL = "https://defi-router-backend-3.onrender.com";
 
-// REGISTER
+// ---------- REGISTER ----------
 async function registerUser() {
-  const name = document.getElementById("name").value;
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
 
-  const res = await fetch(`${API_URL}/api/auth/register`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, email, password }),
-  });
+  if (!name || !email || !password) {
+    alert("Fill all fields");
+    return;
+  }
 
-  const data = await res.json();
-  alert(data.message);
+  try {
+    const res = await fetch(`${API_URL}/api/auth/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, password }),
+    });
+
+    const data = await res.json();
+    alert(data.message);
+
+    if (res.ok) {
+      window.location.href = "login.html";
+    }
+  } catch {
+    alert("Backend not running");
+  }
 }
 
-// LOGIN
+// ---------- LOGIN ----------
 async function loginUser() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
 
-  const res = await fetch(`${API_URL}/api/auth/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password }),
-  });
-
-  const data = await res.json();
-
-  if (data.token) {
-    localStorage.setItem("token", data.token);
-    alert("Login successful");
-    window.location.href = "index.html";
-  } else {
-    alert(data.message);
+  if (!email || !password) {
+    alert("Fill all fields");
+    return;
   }
+
+  try {
+    const res = await fetch(`${API_URL}/api/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await res.json();
+
+    if (data.token) {
+      localStorage.setItem("token", data.token);
+      alert("Login successful");
+      window.location.href = "index.html";
+    } else {
+      alert(data.message || "Login failed");
+    }
+  } catch {
+    alert("Backend not running");
+  }
+}
+
+// ---------- LOGOUT ----------
+function logoutUser() {
+  localStorage.removeItem("token");
+  alert("Logged out successfully");
+  window.location.href = "login.html";
 }

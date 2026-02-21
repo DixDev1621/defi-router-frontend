@@ -1,92 +1,198 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Login | DeFi Router</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>Login | DeFi Router</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body {
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-      font-family: "Poppins", sans-serif;
-      color: white;
-    }
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Poppins",sans-serif;
+}
 
-    .card {
-      width: 360px;
-      padding: 30px;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.1);
-      backdrop-filter: blur(15px);
-      box-shadow: 0 0 30px rgba(0,0,0,0.4);
-    }
+body{
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:linear-gradient(135deg,#0f0c29,#1a103d,#32185b,#7326c5);
+  background-size:300% 300%;
+  animation:gradientMove 12s ease infinite;
+  overflow:hidden;
+}
 
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      color: #c084fc;
-    }
+@keyframes gradientMove{
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
 
-    input {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border-radius: 8px;
-      border: none;
-      outline: none;
-      font-size: 14px;
-    }
+.card{
+  width:350px;
+  padding:40px;
+  border-radius:20px;
+  backdrop-filter:blur(18px);
+  background:rgba(255,255,255,0.07);
+  box-shadow:0 8px 30px rgba(0,0,0,0.5);
+  text-align:center;
+  color:#fff;
+  animation:fadeIn 0.8s ease;
+}
 
-    button {
-      width: 100%;
-      padding: 12px;
-      margin-top: 15px;
-      border: none;
-      border-radius: 8px;
-      background: linear-gradient(45deg, #7c3aed, #c084fc);
-      color: white;
-      font-size: 15px;
-      font-weight: bold;
-      cursor: pointer;
-    }
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(20px);}
+  to{opacity:1; transform:translateY(0);}
+}
 
-    button:hover {
-      opacity: 0.9;
-    }
+.card h2{
+  margin-bottom:25px;
+  color:#c084fc;
+}
 
-    .link {
-      text-align: center;
-      margin-top: 15px;
-      font-size: 14px;
-    }
+input{
+  width:100%;
+  padding:12px;
+  margin:10px 0;
+  border:none;
+  border-radius:10px;
+  background:rgba(255,255,255,0.1);
+  color:#fff;
+  outline:none;
+  transition:0.3s;
+}
 
-    .link a {
-      color: #c084fc;
-      text-decoration: none;
-    }
-  </style>
+input:focus{
+  box-shadow:0 0 15px #b517ff;
+}
+
+button{
+  width:100%;
+  padding:12px;
+  margin-top:15px;
+  border:none;
+  border-radius:30px;
+  background:linear-gradient(45deg,#7b2ff7,#f107a3);
+  color:#fff;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+button:hover{
+  transform:scale(1.05);
+  box-shadow:0 0 20px #b517ff;
+}
+
+p{
+  margin-top:20px;
+  font-size:14px;
+}
+
+a{
+  color:#c084fc;
+  text-decoration:none;
+}
+
+/* CONFETTI */
+.confetti{
+  position:fixed;
+  width:10px;
+  height:10px;
+  background:red;
+  top:-10px;
+  animation:fall 3s linear forwards;
+}
+
+@keyframes fall{
+  to{
+    transform:translateY(100vh) rotate(720deg);
+    opacity:0;
+  }
+}
+
+.success-message{
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  background:rgba(0,0,0,0.7);
+  padding:30px 50px;
+  border-radius:15px;
+  font-size:22px;
+  color:#c084fc;
+  text-align:center;
+  display:none;
+  animation:pop 0.5s ease;
+}
+
+@keyframes pop{
+  from{transform:translate(-50%,-50%) scale(0.5);}
+  to{transform:translate(-50%,-50%) scale(1);}
+}
+</style>
 </head>
 
 <body>
 
-  <div class="card">
-    <h2>Welcome Back</h2>
+<div class="card">
+  <h2>Welcome Back</h2>
 
-    <input id="email" placeholder="Email">
-    <input id="password" type="password" placeholder="Password">
+  <input id="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
 
-    <button onclick="loginUser()">Login</button>
+  <button onclick="customLogin()">Login</button>
 
-    <div class="link">
-      Don’t have an account?
-      <a href="register.html">Register</a>
-    </div>
-  </div>
+  <p>
+    Don’t have an account?
+    <a href="register.html">Register</a>
+  </p>
+</div>
 
-  <script src="js/auth.js"></script>
+<div class="success-message" id="successBox">
+  🎉 Login Successful! <br> Welcome to DeFi Router 🚀
+</div>
+
+<script src="js/auth.js"></script>
+
+<script>
+function launchConfetti(){
+  for(let i=0;i<80;i++){
+    const conf=document.createElement("div");
+    conf.classList.add("confetti");
+    conf.style.left=Math.random()*100+"vw";
+    conf.style.background=`hsl(${Math.random()*360},100%,50%)`;
+    conf.style.animationDuration=(2+Math.random()*2)+"s";
+    document.body.appendChild(conf);
+    setTimeout(()=>conf.remove(),4000);
+  }
+}
+
+async function customLogin(){
+  const email=document.getElementById("email").value;
+  const password=document.getElementById("password").value;
+
+  if(!email || !password){
+    alert("Please enter email and password");
+    return;
+  }
+
+  // call original login
+  await loginUser();
+
+  // if token stored = success
+  if(localStorage.getItem("token")){
+    document.getElementById("successBox").style.display="block";
+    launchConfetti();
+
+    setTimeout(()=>{
+      window.location.href="index.html";
+    },3000);
+  }
+}
+</script>
+
 </body>
 </html>
